@@ -11,6 +11,11 @@
   gtag('js', new Date());
 
   gtag('config', 'G-9LDBJ1H8MQ');
+
+  // تسجيل فتح الصفحة
+  gtag('event', 'page_view', {
+    page: 'login_page'
+  });
 </script>
 
 <style>
@@ -22,7 +27,6 @@ body {
   overflow: hidden;
 }
 
-/* Matrix background */
 canvas {
   position: fixed;
   top: 0;
@@ -30,7 +34,6 @@ canvas {
   z-index: -1;
 }
 
-/* بوكس اللوجن */
 .login-box {
   margin-top: 120px;
   border: 2px solid #00ff00;
@@ -41,7 +44,6 @@ canvas {
   background: rgba(0,0,0,0.85);
 }
 
-/* العنوان */
 h1 {
   text-shadow: 0 0 10px #00ff00;
   animation: flicker 1.5s infinite;
@@ -52,7 +54,6 @@ h1 {
   50% {opacity: 0.6;}
 }
 
-/* الانبوت */
 input {
   background: black;
   color: #00ff00;
@@ -62,7 +63,6 @@ input {
   width: 200px;
 }
 
-/* زرار */
 button {
   background: black;
   color: #00ff00;
@@ -77,7 +77,6 @@ button:hover {
   cursor: pointer;
 }
 
-/* رسائل */
 #error {
   color: red;
   display: none;
@@ -87,7 +86,6 @@ button:hover {
   display: none;
 }
 
-/* جملة مرعبة */
 .hacker-text {
   position: absolute;
   bottom: 10px;
@@ -103,6 +101,9 @@ button:hover {
 <body>
 
 <canvas id="matrix"></canvas>
+
+<!-- صوت -->
+<audio id="clickSound" src="https://www.soundjay.com/buttons/beep-07.mp3"></audio>
 
 <div class="login-box">
   <h1>⚠ SYSTEM LOCKED ⚠</h1>
@@ -121,8 +122,12 @@ button:hover {
 </div>
 
 <script>
-// LOGIN
+let attempts = 0;
+
 function login() {
+
+  document.getElementById("clickSound").play();
+
   let u = document.getElementById("user").value;
   let p = document.getElementById("pass").value;
 
@@ -132,20 +137,29 @@ function login() {
   error.style.display = "none";
   loading.style.display = "block";
 
+  attempts++;
+
+  // لو عدّى 3 محاولات
+  if(attempts > 3){
+    alert("🚫 SYSTEM LOCKED");
+    gtag('event', 'login_attempt', { status: 'blocked' });
+    return;
+  }
+
   setTimeout(() => {
     if(u === "admin" && p === "7oms") {
 
-      // تسجيل حدث دخول
-      gtag('event', 'login_success');
+      gtag('event', 'login_attempt', { status: 'success' });
 
       localStorage.setItem("loggedIn", "true");
       window.location.href = "index.html";
+
     } else {
+
       loading.style.display = "none";
       error.style.display = "block";
 
-      // تسجيل محاولة فاشلة
-      gtag('event', 'login_failed');
+      gtag('event', 'login_attempt', { status: 'failed' });
     }
   }, 1000);
 }
