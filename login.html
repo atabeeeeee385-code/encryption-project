@@ -38,6 +38,7 @@ function login() {
   let p = document.getElementById("pass").value;
 
   if(u === "admin" && p === "1234") {
+    localStorage.setItem("loggedIn", "true");
     window.location.href = "index.html";
   } else {
     alert("Wrong data ❌");
