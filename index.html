@@ -10,27 +10,7 @@ body {
   color: #00ff00;
   font-family: monospace;
   text-align: center;
-  padding-top: 100px;
-}
-
-.dev-box {
-  margin-top: 50px;
-  border: 2px solid #00ff00;
-  padding: 15px;
-  width: 320px;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 12px;
-  box-shadow: 0 0 20px #00ff00;
-  background: rgba(0, 0, 0, 0.8);
-}
-
-.dev-box h3 {
-  margin-bottom: 10px;
-}
-
-.dev-box p {
-  margin: 6px 0;
+  padding-top: 80px;
 }
 
 input, button {
@@ -39,6 +19,74 @@ input, button {
   border: 1px solid #00ff00;
   padding: 10px;
   margin: 5px;
+}
+
+/* بوكس التيم */
+.dev-box {
+  margin-top: 60px;
+  border: 2px solid #00ff00;
+  padding: 20px;
+  width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 15px;
+  box-shadow: 0 0 25px #00ff00;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* المشرفة */
+.supervisor {
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #00ff00;
+}
+
+.supervisor h3 {
+  margin-bottom: 5px;
+}
+
+/* الجريد */
+.team {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 15px;
+}
+
+/* كل عضو */
+.member {
+  text-align: center;
+}
+
+.member img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #00ff00;
+  box-shadow: 0 0 15px #00ff00;
+  transition: 0.3s;
+}
+
+.member img:hover {
+  transform: scale(1.1);
+}
+
+/* placeholder للي ملوش صورة */
+.placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #00ff00;
+  box-shadow: 0 0 15px #00ff00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+
+.member p {
+  margin-top: 8px;
+  font-size: 14px;
 }
 </style>
 
@@ -62,16 +110,50 @@ if(localStorage.getItem("loggedIn") !== "true") {
 
 <p id="result"></p>
 
-<!-- زرار تسجيل خروج -->
+<br>
 <button onclick="logout()">Logout</button>
 
+<!-- التيم -->
 <div class="dev-box">
+
+  <!-- المشرفة -->
+  <div class="supervisor">
+    <h3>🎓 Project Supervisor</h3>
+    <p>Eng. Farida Azab</p>
+  </div>
+
+  <!-- الفريق -->
   <h3>👨‍💻 Development Team</h3>
-  <p>Abdullah Badawy (Leader)</p>
-  <p>Mohamed Alaa</p>
-  <p>Youssef Moslem</p>
-  <p>Mohamed Abu El Ghar</p>
-  <p>Marwan Mousa</p>
+
+  <div class="team">
+
+    <div class="member">
+      <img src="Abdallah.jpg">
+      <p>Abdullah Badawy (Leader)</p>
+    </div>
+
+    <div class="member">
+      <img src="7oms.jpg">
+      <p>Mohamed Alaa</p>
+    </div>
+
+    <div class="member">
+      <img src="Yousef.jpg">
+      <p>Youssef Moslem</p>
+    </div>
+
+    <div class="member">
+      <img src="Maro.jpg">
+      <p>Marwan Mousa</p>
+    </div>
+
+    <div class="member">
+      <div class="placeholder">👤</div>
+      <p>Mohamed Abu El Ghar</p>
+    </div>
+
+  </div>
+
 </div>
 
 <script>
