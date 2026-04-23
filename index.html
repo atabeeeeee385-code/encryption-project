@@ -3,24 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <title>Encryption Project</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+body {
+  background: black;
+  color: #00ff00;
+  font-family: monospace;
+  text-align: center;
+  padding-top: 100px;
+}
+
+input, button {
+  background: black;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  padding: 10px;
+  margin: 5px;
+}
+</style>
+
 </head>
 
 <body>
 
 <h1>🔐 Encryption & Decryption</h1>
 
-<input type="text" id="text" placeholder="Enter text">
-
-<br><br>
+<input type="text" id="text" placeholder="Enter text"><br><br>
 
 <button onclick="encrypt()">Encrypt</button>
 <button onclick="decrypt()">Decrypt</button>
-<button onclick="copyText()">Copy</button>
 
 <p id="result"></p>
 
-<script src="script.js"></script>
+<script>
+function encrypt() {
+  let text = document.getElementById("text").value;
+  let result = "";
+
+  for (let i = 0; i < text.length; i++) {
+    result += text.charCodeAt(i) + " ";
+  }
+
+  document.getElementById("result").innerText = result;
+}
+
+function decrypt() {
+  let text = document.getElementById("text").value.split(" ");
+  let result = "";
+
+  for (let i = 0; i < text.length; i++) {
+    if(text[i] != "")
+      result += String.fromCharCode(text[i]);
+  }
+
+  document.getElementById("result").innerText = result;
+}
+</script>
 
 </body>
 </html>
