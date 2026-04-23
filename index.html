@@ -25,10 +25,6 @@ input, button {
 </head>
 
 <body>
-  
-<script>
-window.location.href = "login.html";
-  </script>
 
 <h1>🔐 Encryption & Decryption</h1>
 
@@ -56,8 +52,9 @@ function decrypt() {
   let result = "";
 
   for (let i = 0; i < text.length; i++) {
-    if(text[i] != "")
+    if (text[i] != "") {
       result += String.fromCharCode(text[i]);
+    }
   }
 
   document.getElementById("result").innerText = result;
