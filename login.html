@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login</title>
+<title>Access System</title>
 
 <style>
 body {
@@ -9,15 +9,82 @@ body {
   color: #00ff00;
   font-family: monospace;
   text-align: center;
-  padding-top: 100px;
+  overflow: hidden;
 }
 
-input, button {
+/* Matrix background */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* بوكس اللوجن */
+.login-box {
+  margin-top: 120px;
+  border: 2px solid #00ff00;
+  display: inline-block;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #00ff00;
+  background: rgba(0,0,0,0.85);
+}
+
+/* العنوان */
+h1 {
+  text-shadow: 0 0 10px #00ff00;
+  animation: flicker 1.5s infinite;
+}
+
+@keyframes flicker {
+  0%, 100% {opacity: 1;}
+  50% {opacity: 0.6;}
+}
+
+/* الانبوت */
+input {
   background: black;
   color: #00ff00;
   border: 1px solid #00ff00;
   padding: 10px;
-  margin: 5px;
+  margin: 10px;
+  width: 200px;
+}
+
+/* زرار */
+button {
+  background: black;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  padding: 10px 20px;
+}
+
+button:hover {
+  background: #00ff00;
+  color: black;
+  box-shadow: 0 0 10px #00ff00;
+  cursor: pointer;
+}
+
+/* رسائل */
+#error {
+  color: red;
+  display: none;
+}
+
+#loading {
+  display: none;
+}
+
+/* جملة مرعبة */
+.hacker-text {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  color: #00ff00;
+  font-size: 12px;
+  opacity: 0.6;
 }
 </style>
 
@@ -25,25 +92,84 @@ input, button {
 
 <body>
 
-<h1>🔐 Login</h1>
+<canvas id="matrix"></canvas>
 
-<input type="text" id="user" placeholder="Username"><br>
-<input type="password" id="pass" placeholder="Password"><br>
+<div class="login-box">
+  <h1>⚠ SYSTEM LOCKED ⚠</h1>
 
-<button onclick="login()">Login</button>
+  <input type="text" id="user" placeholder="Username"><br>
+  <input type="password" id="pass" placeholder="Password"><br>
+
+  <button onclick="login()">ACCESS</button>
+
+  <p id="error">❌ ACCESS DENIED</p>
+  <p id="loading">Decrypting...</p>
+</div>
+
+<div class="hacker-text">
+  >> Unauthorized access will be tracked...  
+</div>
 
 <script>
+// LOGIN
 function login() {
   let u = document.getElementById("user").value;
   let p = document.getElementById("pass").value;
 
-  if(u === "admin" && p === "qwer12347oms") {
-    localStorage.setItem("loggedIn", "true");
-    window.location.href = "index.html";
-  } else {
-    alert("Wrong data ❌");
+  let error = document.getElementById("error");
+  let loading = document.getElementById("loading");
+
+  error.style.display = "none";
+  loading.style.display = "block";
+
+  setTimeout(() => {
+    if(u === "admin" && p === "1234") {
+      localStorage.setItem("loggedIn", "true");
+      window.location.href = "index.html";
+    } else {
+      loading.style.display = "none";
+      error.style.display = "block";
+    }
+  }, 1000);
+}
+
+// MATRIX EFFECT
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
+letters = letters.split("");
+
+let fontSize = 14;
+let columns = canvas.width / fontSize;
+
+let drops = [];
+for(let i = 0; i < columns; i++) {
+  drops[i] = 1;
+}
+
+function draw() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#00ff00";
+  ctx.font = fontSize + "px monospace";
+
+  for(let i = 0; i < drops.length; i++) {
+    let text = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+
+    if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
   }
 }
+
+setInterval(draw, 33);
 </script>
 
 </body>
