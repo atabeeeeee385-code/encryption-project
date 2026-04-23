@@ -12,6 +12,11 @@
   gtag('js', new Date());
 
   gtag('config', 'G-9LDBJ1H8MQ');
+
+  // تسجيل فتح الصفحة
+  gtag('event', 'page_view', {
+    page: 'index_page'
+  });
 </script>
 
 <style>
@@ -31,7 +36,6 @@ input, button {
   margin: 5px;
 }
 
-/* بوكس التيم */
 .dev-box {
   margin-top: 60px;
   border: 2px solid #00ff00;
@@ -44,18 +48,12 @@ input, button {
   background: rgba(0, 0, 0, 0.8);
 }
 
-/* المشرفة */
 .supervisor {
   margin-bottom: 25px;
   padding-bottom: 10px;
   border-bottom: 1px solid #00ff00;
 }
 
-.supervisor h3 {
-  margin-bottom: 5px;
-}
-
-/* الجريد */
 .team {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -63,7 +61,6 @@ input, button {
   margin-top: 15px;
 }
 
-/* كل عضو */
 .member {
   text-align: center;
 }
@@ -81,7 +78,6 @@ input, button {
   transform: scale(1.1);
 }
 
-/* placeholder */
 .placeholder {
   width: 80px;
   height: 80px;
@@ -123,7 +119,6 @@ if(localStorage.getItem("loggedIn") !== "true") {
 <br>
 <button onclick="logout()">Logout</button>
 
-<!-- التيم -->
 <div class="dev-box">
 
   <div class="supervisor">
@@ -176,7 +171,9 @@ function encrypt() {
   document.getElementById("result").innerText = result;
 
   // تسجيل الحدث
-  gtag('event', 'encrypt_used');
+  gtag('event', 'encryption_action', {
+    type: 'encrypt'
+  });
 }
 
 function decrypt() {
@@ -192,14 +189,18 @@ function decrypt() {
   document.getElementById("result").innerText = result;
 
   // تسجيل الحدث
-  gtag('event', 'decrypt_used');
+  gtag('event', 'encryption_action', {
+    type: 'decrypt'
+  });
 }
 
 function logout() {
   localStorage.removeItem("loggedIn");
 
   // تسجيل خروج
-  gtag('event', 'logout');
+  gtag('event', 'user_session', {
+    action: 'logout'
+  });
 
   window.location.href = "login.html";
 }
