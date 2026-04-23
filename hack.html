@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Hacking...</title>
+
+<style>
+body {
+    background: black;
+    color: #00ff00;
+    font-family: monospace;
+}
+</style>
+</head>
+
+<body>
+
+<pre id="hack"></pre>
+
+<script>
+let text = "";
+let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+let el = document.getElementById("hack");
+
+setInterval(()=>{
+    for(let i=0;i<50;i++){
+        text += chars[Math.floor(Math.random()*chars.length)];
+    }
+    text += "\n";
+    el.innerText = text;
+},100);
+
+setTimeout(()=>{
+    window.location.href = "login.html";
+},3000);
+</script>
+
+</body>
+</html>
