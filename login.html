@@ -3,6 +3,16 @@
 <head>
 <title>Access System</title>
 
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9LDBJ1H8MQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9LDBJ1H8MQ');
+</script>
+
 <style>
 body {
   background: black;
@@ -124,11 +134,18 @@ function login() {
 
   setTimeout(() => {
     if(u === "admin" && p === "7oms") {
+
+      // تسجيل حدث دخول
+      gtag('event', 'login_success');
+
       localStorage.setItem("loggedIn", "true");
       window.location.href = "index.html";
     } else {
       loading.style.display = "none";
       error.style.display = "block";
+
+      // تسجيل محاولة فاشلة
+      gtag('event', 'login_failed');
     }
   }, 1000);
 }
