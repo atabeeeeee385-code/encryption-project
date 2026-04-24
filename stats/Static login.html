@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dataset Login</title>
+
+<style>
+body {
+  background: black;
+  color: #00ff00;
+  font-family: monospace;
+  text-align: center;
+  overflow: hidden;
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.login-box {
+  margin-top: 120px;
+  border: 2px solid #00ff00;
+  display: inline-block;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #00ff00;
+  background: rgba(0,0,0,0.85);
+}
+
+h1 {
+  text-shadow: 0 0 10px #00ff00;
+}
+
+input, select {
+  background: black;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  padding: 10px;
+  margin: 10px;
+  width: 220px;
+}
+
+button {
+  background: black;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  padding: 10px 20px;
+}
+
+button:hover {
+  background: #00ff00;
+  color: black;
+}
+
+#error {
+  color: red;
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="login-box">
+  <h1>🔐 Dataset Access</h1>
+
+  <input type="text" id="user" placeholder="Username"><br>
+  <input type="password" id="pass" placeholder="Password"><br>
+
+  <!-- اختيار الداتا -->
+  <select id="dataset">
+    <option value="students">Students Data</option>
+    <option value="sales">Sales Data</option>
+    <option value="random">Random Data</option>
+  </select><br>
+
+  <button onclick="login()">ENTER</button>
+
+  <p id="error">❌ Wrong Data</p>
+</div>
+
+<script>
+function login() {
+  let u = document.getElementById("user").value;
+  let p = document.getElementById("pass").value;
+  let d = document.getElementById("dataset").value;
+
+  if(u === "admin" && p === "1234") {
+    localStorage.setItem("loggedIn", "true");
+    localStorage.setItem("dataset", d);
+
+    window.location.href = "index.html";
+  } else {
+    document.getElementById("error").style.display = "block";
+  }
+}
+
+// MATRIX EFFECT
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let letters = "01ABCDEF";
+letters = letters.split("");
+
+let fontSize = 14;
+let columns = canvas.width / fontSize;
+
+let drops = [];
+for(let i = 0; i < columns; i++) drops[i] = 1;
+
+function draw() {
+  ctx.fillStyle = "rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle = "#00ff00";
+  ctx.font = fontSize + "px monospace";
+
+  for(let i=0;i<drops.length;i++){
+    let text = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+    if(drops[i]*fontSize > canvas.height && Math.random()>0.975)
+      drops[i]=0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw,33);
+</script>
+
+</body>
+</html>
