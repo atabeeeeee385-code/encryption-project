@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Advanced Statistics Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body {
+  background: black;
+  color: #00ff00;
+  font-family: monospace;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* Matrix */
+canvas#matrix {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* UI */
+input, button {
+  background: black;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  padding: 10px;
+  margin: 5px;
+}
+
+button:hover {
+  background: #00ff00;
+  color: black;
+  cursor: pointer;
+}
+
+.top-bar {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+}
+
+.charts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+canvas {
+  max-width: 350px;
+  margin: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- حماية -->
+<script>
+if(localStorage.getItem("loggedIn") !== "true") {
+  window.location.href = "login.html";
+}
+</script>
+
+<!-- Matrix -->
+<canvas id="matrix"></canvas>
+
+<div class="top-bar">
+  <button onclick="reset()">Reset</button>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<h1>📊 Ultimate Statistics Dashboard</h1>
+
+<input type="text" id="data">
+<br>
+
+<button onclick="calculate()">Analyze</button>
+<button onclick="sortData()">Sort</button>
+<button onclick="downloadPDF()">PDF</button>
+<button onclick="downloadCSV()">CSV</button>
+
+<p id="result"></p>
+<p id="info"></p>
+
+<div class="charts">
+  <canvas id="bar"></canvas>
+  <canvas id="scatter"></canvas>
+  <canvas id="hist"></canvas>
+  <canvas id="pie"></canvas>
+</div>
+
+<script>
+let charts = [];
+let arr = [];
+
+// تحميل الداتا
+let type = localStorage.getItem("datasetType");
+let csv = localStorage.getItem("csvData");
+
+if(csv) {
+  arr = csv.split(/,|\\n/).map(x=>x.trim()).filter(x=>x!="").map(Number);
+}
+else if(type === "students") {
+  arr = [10,15,20,18,17,12,14];
+}
+else {
+  arr = [200,300,250,400,350,500];
+}
+
+document.getElementById("data").value = arr.join(",");
+
+// حساب
+function calculate() {
+
+  arr = document.getElementById("data").value.split(",").map(Number);
+
+  charts.forEach(c => c.destroy());
+  charts = [];
+
+  let mean = arr.reduce((a,b)=>a+b,0)/arr.length;
+  let sorted = [...arr].sort((a,b)=>a-b);
+  let median = sorted[Math.floor(arr.length/2)];
+
+  let range = Math.max(...arr) - Math.min(...arr);
+  let variance = arr.reduce((a,b)=>a+(b-mean)**2,0)/arr.length;
+  let std = Math.sqrt(variance);
+
+  document.getElementById("result").innerHTML =
+    `Mean: ${mean.toFixed(2)} | Median: ${median} | Range: ${range}`;
+
+  document.getElementById("info").innerHTML =
+    `Count: ${arr.length} | Min: ${Math.min(...arr)} | Max: ${Math.max(...arr)}`;
+
+  drawCharts(arr);
+}
+
+// رسم
+function drawCharts(arr) {
+
+  charts.push(new Chart(bar, {
+    type:'bar',
+    data:{labels:arr, datasets:[{data:arr}]},
+    options:{responsive:true}
+  }));
+
+  charts.push(new Chart(scatter, {
+    type:'scatter',
+    data:{datasets:[{data:arr.map((v,i)=>({x:i,y:v}))}]}
+  }));
+
+  let bins={};
+  arr.forEach(v=>{
+    let b=Math.floor(v/5)*5;
+    bins[b]=(bins[b]||0)+1;
+  });
+
+  charts.push(new Chart(hist, {
+    type:'bar',
+    data:{labels:Object.keys(bins), datasets:[{data:Object.values(bins)}]}
+  }));
+
+  charts.push(new Chart(pie, {
+    type:'pie',
+    data:{labels:arr, datasets:[{data:arr}]}
+  }));
+}
+
+// ترتيب
+function sortData() {
+  arr.sort((a,b)=>a-b);
+  document.getElementById("data").value = arr.join(",");
+  calculate();
+}
+
+// PDF
+async function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.text("Statistics Report", 20, 20);
+  doc.text(document.getElementById("result").innerText, 20, 40);
+
+  doc.save("report.pdf");
+}
+
+// CSV
+function downloadCSV() {
+  let csv = arr.join(",");
+  let blob = new Blob([csv], {type: "text/csv"});
+  let a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "data.csv";
+  a.click();
+}
+
+// logout
+function logout(){
+  localStorage.clear();
+  window.location.href="login.html";
+}
+
+// reset
+function reset(){
+  location.reload();
+}
+
+// MATRIX
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+letters = letters.split("");
+
+let fontSize = 14;
+let columns = canvas.width / fontSize;
+let drops = Array(columns).fill(1);
+
+function draw() {
+  ctx.fillStyle = "rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle = "#00ff00";
+  ctx.font = fontSize+"px monospace";
+
+  for(let i=0;i<drops.length;i++){
+    let text = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+    if(drops[i]*fontSize > canvas.height && Math.random()>0.975)
+      drops[i]=0;
+
+    drops[i]++;
+  }
+}
+
+setInterval(draw,33);
+</script>
+
+</body>
+</html>
