@@ -47,9 +47,7 @@ input, button {
   font-size: 13px;
 }
 
-/* 🔥 الإضافات */
-
-/* زرار المينيو */
+/* ☰ Menu */
 .menu-btn {
   position: fixed;
   top: 15px;
@@ -62,7 +60,6 @@ input, button {
   z-index: 1000;
 }
 
-/* السايد بار */
 .side-menu {
   position: fixed;
   top: 0;
@@ -81,6 +78,66 @@ input, button {
   height: 100%;
   border: none;
 }
+
+/* Team */
+.dev-box {
+  margin-top: 60px;
+  border: 2px solid #00ff00;
+  padding: 20px;
+  width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 15px;
+  box-shadow: 0 0 25px #00ff00;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.supervisor {
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #00ff00;
+}
+
+.team {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.member {
+  text-align: center;
+}
+
+.member img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #00ff00;
+  box-shadow: 0 0 15px #00ff00;
+  transition: 0.3s;
+}
+
+.member img:hover {
+  transform: scale(1.1);
+}
+
+.placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #00ff00;
+  box-shadow: 0 0 15px #00ff00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+
+.member p {
+  margin-top: 8px;
+  font-size: 14px;
+}
 </style>
 </head>
 
@@ -92,10 +149,9 @@ if(localStorage.getItem("loggedIn") !== "true") {
 }
 </script>
 
-<!-- ☰ زرار -->
+<!-- ☰ Menu -->
 <button class="menu-btn" onclick="toggleMenu()">☰</button>
 
-<!-- Sidebar -->
 <div id="sideMenu" class="side-menu">
   <iframe src="about.html"></iframe>
 </div>
@@ -116,15 +172,56 @@ if(localStorage.getItem("loggedIn") !== "true") {
 <br>
 <button onclick="logout()">Logout</button>
 
+<!-- Team -->
+<div class="dev-box">
+
+  <div class="supervisor">
+    <h3>🎓 Project Supervisor</h3>
+    <p>Eng. Farida Azab</p>
+  </div>
+
+  <h3>👨‍💻 Development Team</h3>
+
+  <div class="team">
+
+    <div class="member">
+      <img src="Abdallah 1.jpg">
+      <p>Abdullah Badawy (Leader)</p>
+    </div>
+
+    <div class="member">
+      <img src="7oms.jpg">
+      <p>Mohamed Alaa</p>
+    </div>
+
+    <div class="member">
+      <img src="Yousef.jpg">
+      <p>Youssef Moslem</p>
+    </div>
+
+    <div class="member">
+      <img src="Maro.jpg">
+      <p>Marwan Mousa</p>
+    </div>
+
+    <div class="member">
+      <div class="placeholder">👤</div>
+      <p>Mohamed Abu El Ghar</p>
+    </div>
+
+  </div>
+
+</div>
+
 <script>
 
-// فتح وقفل المينيو
+// Menu
 function toggleMenu() {
   let menu = document.getElementById("sideMenu");
   menu.style.left = (menu.style.left === "0px") ? "-350px" : "0px";
 }
 
-// خرائط الأرقام
+// Encryption Logic (زي ما هو)
 let map = {
   "0":"5","1":"8","2":"3","3":"9","4":"1",
   "5":"0","6":"2","7":"4","8":"6","9":"7"
@@ -135,7 +232,6 @@ let reverseMap = {
   "0":"5","2":"6","4":"7","6":"8","7":"9"
 };
 
-// 🔐 Encrypt
 function encrypt() {
   let text = document.getElementById("text").value;
   let result = "";
@@ -148,32 +244,23 @@ function encrypt() {
   for (let i = 0; i < text.length; i++) {
     let char = text[i];
 
-    if (map[char]) {
-      result += map[char];
-    }
+    if (map[char]) result += map[char];
     else if (char >= 'a' && char <= 'z') {
       let code = char.charCodeAt(0) - 97;
-      code = (code + 2) % 26;
-      result += String.fromCharCode(code + 97);
+      result += String.fromCharCode(((code + 2) % 26) + 97);
     }
     else if (char >= 'A' && char <= 'Z') {
       let code = char.charCodeAt(0) - 65;
-      code = (code + 2) % 26;
-      result += String.fromCharCode(code + 65);
+      result += String.fromCharCode(((code + 2) % 26) + 65);
     }
-    else {
-      result += char;
-    }
+    else result += char;
   }
 
   document.getElementById("result").innerText = result;
-
   saveHistory("Encrypt", text, result);
-
   gtag('event', 'encryption_action', { type: 'encrypt' });
 }
 
-// 🔓 Decrypt
 function decrypt() {
   let text = document.getElementById("text").value;
   let result = "";
@@ -186,66 +273,42 @@ function decrypt() {
   for (let i = 0; i < text.length; i++) {
     let char = text[i];
 
-    if (reverseMap[char]) {
-      result += reverseMap[char];
-    }
+    if (reverseMap[char]) result += reverseMap[char];
     else if (char >= 'a' && char <= 'z') {
       let code = char.charCodeAt(0) - 97;
-      code = (code - 2 + 26) % 26;
-      result += String.fromCharCode(code + 97);
+      result += String.fromCharCode(((code - 2 + 26) % 26) + 97);
     }
     else if (char >= 'A' && char <= 'Z') {
       let code = char.charCodeAt(0) - 65;
-      code = (code - 2 + 26) % 26;
-      result += String.fromCharCode(code + 65);
+      result += String.fromCharCode(((code - 2 + 26) % 26) + 65);
     }
-    else {
-      result += char;
-    }
+    else result += char;
   }
 
   document.getElementById("result").innerText = result;
-
   saveHistory("Decrypt", text, result);
-
   gtag('event', 'encryption_action', { type: 'decrypt' });
 }
 
-// 📋 Copy
 function copyText() {
   let text = document.getElementById("result").innerText;
-
-  if (text === "") {
-    alert("مفيش حاجة تتنسخ");
-    return;
-  }
-
+  if (text === "") return alert("مفيش حاجة تتنسخ");
   navigator.clipboard.writeText(text);
   alert("تم النسخ ✅");
 }
 
-// 📜 Save History
 function saveHistory(type, input, output) {
   let history = JSON.parse(localStorage.getItem("history")) || [];
-
-  history.unshift({
-    type: type,
-    input: input,
-    output: output
-  });
-
+  history.unshift({ type, input, output });
   localStorage.setItem("history", JSON.stringify(history));
   displayHistory();
 }
 
-// 📜 Display History
 function displayHistory() {
   let history = JSON.parse(localStorage.getItem("history")) || [];
   let container = document.getElementById("history");
-
   container.innerHTML = "";
-
-  history.slice(0, 5).forEach(item => {
+  history.slice(0,5).forEach(item => {
     let div = document.createElement("div");
     div.className = "history-item";
     div.innerText = `${item.type}: ${item.input} → ${item.output}`;
@@ -255,7 +318,6 @@ function displayHistory() {
 
 window.onload = displayHistory;
 
-// Logout
 function logout() {
   localStorage.removeItem("loggedIn");
   window.location.href = "login.html";
