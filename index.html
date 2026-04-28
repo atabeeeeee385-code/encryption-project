@@ -46,6 +46,41 @@ input, button {
   padding: 5px;
   font-size: 13px;
 }
+
+/* 🔥 الإضافات */
+
+/* زرار المينيو */
+.menu-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  font-size: 20px;
+  background: black;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  padding: 10px;
+  z-index: 1000;
+}
+
+/* السايد بار */
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -350px;
+  width: 300px;
+  height: 100%;
+  background: black;
+  border-right: 2px solid #00ff00;
+  box-shadow: 0 0 20px #00ff00;
+  transition: 0.4s;
+  z-index: 999;
+}
+
+.side-menu iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
 </style>
 </head>
 
@@ -56,6 +91,14 @@ if(localStorage.getItem("loggedIn") !== "true") {
   window.location.href = "login.html";
 }
 </script>
+
+<!-- ☰ زرار -->
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+<!-- Sidebar -->
+<div id="sideMenu" class="side-menu">
+  <iframe src="about.html"></iframe>
+</div>
 
 <h1>🔐 Encryption & Decryption</h1>
 
@@ -74,6 +117,12 @@ if(localStorage.getItem("loggedIn") !== "true") {
 <button onclick="logout()">Logout</button>
 
 <script>
+
+// فتح وقفل المينيو
+function toggleMenu() {
+  let menu = document.getElementById("sideMenu");
+  menu.style.left = (menu.style.left === "0px") ? "-350px" : "0px";
+}
 
 // خرائط الأرقام
 let map = {
