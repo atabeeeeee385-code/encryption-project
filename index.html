@@ -7,16 +7,10 @@
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9LDBJ1H8MQ"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-9LDBJ1H8MQ');
-
-  // تسجيل فتح الصفحة
-  gtag('event', 'page_view', {
-    page: 'index_page'
-  });
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-9LDBJ1H8MQ');
 </script>
 
 <style>
@@ -36,71 +30,27 @@ input, button {
   margin: 5px;
 }
 
-.dev-box {
-  margin-top: 60px;
-  border: 2px solid #00ff00;
-  padding: 20px;
-  width: 340px;
+#history {
+  margin-top: 15px;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #00ff00;
+  padding: 10px;
+  width: 300px;
   margin-left: auto;
   margin-right: auto;
-  border-radius: 15px;
-  box-shadow: 0 0 25px #00ff00;
-  background: rgba(0, 0, 0, 0.8);
 }
 
-.supervisor {
-  margin-bottom: 25px;
-  padding-bottom: 10px;
+.history-item {
   border-bottom: 1px solid #00ff00;
-}
-
-.team {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin-top: 15px;
-}
-
-.member {
-  text-align: center;
-}
-
-.member img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 2px solid #00ff00;
-  box-shadow: 0 0 15px #00ff00;
-  transition: 0.3s;
-}
-
-.member img:hover {
-  transform: scale(1.1);
-}
-
-.placeholder {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 2px solid #00ff00;
-  box-shadow: 0 0 15px #00ff00;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-}
-
-.member p {
-  margin-top: 8px;
-  font-size: 14px;
+  padding: 5px;
+  font-size: 13px;
 }
 </style>
-
 </head>
 
 <body>
 
-<!-- حماية الصفحة -->
 <script>
 if(localStorage.getItem("loggedIn") !== "true") {
   window.location.href = "login.html";
@@ -113,97 +63,155 @@ if(localStorage.getItem("loggedIn") !== "true") {
 
 <button onclick="encrypt()">Encrypt</button>
 <button onclick="decrypt()">Decrypt</button>
+<button onclick="copyText()">📋 Copy</button>
 
 <p id="result"></p>
+
+<h3>📜 History</h3>
+<div id="history"></div>
 
 <br>
 <button onclick="logout()">Logout</button>
 
-<div class="dev-box">
-
-  <div class="supervisor">
-    <h3>🎓 Project Supervisor</h3>
-    <p>Eng. Farida Azab</p>
-  </div>
-
-  <h3>👨‍💻 Development Team</h3>
-
-  <div class="team">
-
-    <div class="member">
-      <img src="Abdallah 1.jpg">
-      <p>Abdullah Badawy (Leader)</p>
-    </div>
-
-    <div class="member">
-      <img src="7oms.jpg">
-      <p>Mohamed Alaa</p>
-    </div>
-
-    <div class="member">
-      <img src="Yousef.jpg">
-      <p>Youssef Moslem</p>
-    </div>
-
-    <div class="member">
-      <img src="Maro.jpg">
-      <p>Marwan Mousa</p>
-    </div>
-
-    <div class="member">
-      <div class="placeholder">👤</div>
-      <p>Mohamed Abu El Ghar</p>
-    </div>
-
-  </div>
-
-</div>
-
 <script>
+
+// خرائط الأرقام
+let map = {
+  "0":"5","1":"8","2":"3","3":"9","4":"1",
+  "5":"0","6":"2","7":"4","8":"6","9":"7"
+};
+
+let reverseMap = {
+  "5":"0","8":"1","3":"2","9":"3","1":"4",
+  "0":"5","2":"6","4":"7","6":"8","7":"9"
+};
+
+// 🔐 Encrypt
 function encrypt() {
   let text = document.getElementById("text").value;
   let result = "";
 
-  for (let i = 0; i < text.length; i++) {
-    result += text.charCodeAt(i) + " ";
+  if(text === "") {
+    alert("اكتب حاجة الأول");
+    return;
   }
 
-  document.getElementById("result").innerText = result;
-
-  // تسجيل الحدث
-  gtag('event', 'encryption_action', {
-    type: 'encrypt'
-  });
-}
-
-function decrypt() {
-  let text = document.getElementById("text").value.split(" ");
-  let result = "";
-
   for (let i = 0; i < text.length; i++) {
-    if (text[i] != "") {
-      result += String.fromCharCode(text[i]);
+    let char = text[i];
+
+    if (map[char]) {
+      result += map[char];
+    }
+    else if (char >= 'a' && char <= 'z') {
+      let code = char.charCodeAt(0) - 97;
+      code = (code + 2) % 26;
+      result += String.fromCharCode(code + 97);
+    }
+    else if (char >= 'A' && char <= 'Z') {
+      let code = char.charCodeAt(0) - 65;
+      code = (code + 2) % 26;
+      result += String.fromCharCode(code + 65);
+    }
+    else {
+      result += char;
     }
   }
 
   document.getElementById("result").innerText = result;
 
-  // تسجيل الحدث
-  gtag('event', 'encryption_action', {
-    type: 'decrypt'
+  saveHistory("Encrypt", text, result);
+
+  gtag('event', 'encryption_action', { type: 'encrypt' });
+}
+
+// 🔓 Decrypt
+function decrypt() {
+  let text = document.getElementById("text").value;
+  let result = "";
+
+  if(text === "") {
+    alert("اكتب حاجة الأول");
+    return;
+  }
+
+  for (let i = 0; i < text.length; i++) {
+    let char = text[i];
+
+    if (reverseMap[char]) {
+      result += reverseMap[char];
+    }
+    else if (char >= 'a' && char <= 'z') {
+      let code = char.charCodeAt(0) - 97;
+      code = (code - 2 + 26) % 26;
+      result += String.fromCharCode(code + 97);
+    }
+    else if (char >= 'A' && char <= 'Z') {
+      let code = char.charCodeAt(0) - 65;
+      code = (code - 2 + 26) % 26;
+      result += String.fromCharCode(code + 65);
+    }
+    else {
+      result += char;
+    }
+  }
+
+  document.getElementById("result").innerText = result;
+
+  saveHistory("Decrypt", text, result);
+
+  gtag('event', 'encryption_action', { type: 'decrypt' });
+}
+
+// 📋 Copy
+function copyText() {
+  let text = document.getElementById("result").innerText;
+
+  if (text === "") {
+    alert("مفيش حاجة تتنسخ");
+    return;
+  }
+
+  navigator.clipboard.writeText(text);
+  alert("تم النسخ ✅");
+}
+
+// 📜 Save History
+function saveHistory(type, input, output) {
+  let history = JSON.parse(localStorage.getItem("history")) || [];
+
+  history.unshift({
+    type: type,
+    input: input,
+    output: output
+  });
+
+  localStorage.setItem("history", JSON.stringify(history));
+  displayHistory();
+}
+
+// 📜 Display History
+function displayHistory() {
+  let history = JSON.parse(localStorage.getItem("history")) || [];
+  let container = document.getElementById("history");
+
+  container.innerHTML = "";
+
+  history.slice(0, 5).forEach(item => {
+    let div = document.createElement("div");
+    div.className = "history-item";
+    div.innerText = `${item.type}: ${item.input} → ${item.output}`;
+    container.appendChild(div);
   });
 }
 
+window.onload = displayHistory;
+
+// Logout
 function logout() {
   localStorage.removeItem("loggedIn");
-
-  // تسجيل خروج
-  gtag('event', 'user_session', {
-    action: 'logout'
-  });
-
   window.location.href = "login.html";
 }
+
 </script>
 
 </body>
